@@ -1,25 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const mysql = require('mysql');
-require('dotenv').config();
+const { db } = require('./config/database');
 
-//Put these in the env file
 
-const connection = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE
+db.query('call GetEvents(?)', [null], (err, result) => {
+    //if(err) throw err;
+    console.log(result[0]);
 });
-
-connection.connect(err => {
-    if(err) throw err;
-    connection.query('call GetEvents(?)', [null], (err, result) => {
-        //if(err) throw err;
-        console.log(result[0]);
-    });
-})
 
 //Routes
 const authRoute = require('./routes/auth');
