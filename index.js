@@ -15,10 +15,9 @@ const connection = mysql.createConnection({
 
 connection.connect(err => {
     if(err) throw err;
-    console.log('connected');
-    connection.query('select * from countries', (err, result) => {
+    connection.query('call GetEvents(?)', [null], (err, result) => {
         //if(err) throw err;
-        console.log(result);
+        console.log(result[0]);
     });
 })
 
