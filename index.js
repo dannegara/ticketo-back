@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 //Routes
 const authRoute = require('./routes/auth');
 const countriesRoute = require('./routes/countries');
+const ticketRoute = require('./routes/ticket');
 
 const PORT = process.env.PORT || 8000;
 
@@ -20,6 +21,8 @@ app.use(bodyParser.json());
 app.use('/api/auth', authRoute);
 
 app.use('/api/countries', countriesRoute);
+
+app.use('/api/ticket', ticketRoute);
 
 app.listen(PORT, () => {
     console.log("Listen on port " + PORT);
