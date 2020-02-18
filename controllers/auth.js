@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const { db } = require('../config/database');
 const saltRounds = 10;
 
@@ -16,7 +17,8 @@ class Auth{
                     if(result === false){
                         res.json({ msg: 'invalid login or password' });
                     }else{
-                        res.json({ msg: 'login success' });
+                        const token = jwt.sign(databaseResponse[0][0].id, process.env.TOKEN_SECRET_KEY);
+                        res.json({ msg: 'login success', token });
                     }
                 });
             }
