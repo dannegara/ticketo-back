@@ -1,5 +1,7 @@
+const uuid = require('uuid/v4');
+const QRCode = require('qrcode');
 const { db } = require('../config/database');
-const { transporter, mailOptions } = require('../config/email');
+const { transporter } = require('../config/email');
 
 class Ticket{
     
@@ -8,20 +10,23 @@ class Ticket{
         
     }
     static buyTicket = (req, res) => {
-        //res.send("Bought");
-        //Generate qr code here and send to email
-
         //TODO
         //Make mailOptions dynamic
-        const mailOptions = {
-            from: process.env.EMAIL_FROM,
-            to: 'dannegareh@gmail.com',
-            subject: 'Text gmail email',
-            text: 'Email text with qr code'
-        };
-        transporter.sendMail(mailOptions, (err, info) => {
-            if(err) res.json({ err: 'Server error' });
-            res.json({ msg: 'Email sent' });
+
+        QRCode.toDataURL(uuid(), (err, url) => {
+            const mailOptions = {
+                from: process.env.EMAIL_FROM,
+                to: 'dannegareh@gmail.com',
+                subject: 'Text gmail email',
+                html: `<h1>Check file attached to see your code</h1>`,
+                attachments: [{
+                    path: url
+                }]
+            };            
+            transporter.sendMail(mailOptions, (err, mailInfo) => {
+                if(err) res.json({ err: 'server error' });
+                res.json({ msg: 'Email sent' });
+            });
         });
     }
 }
