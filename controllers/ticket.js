@@ -2,6 +2,7 @@ const uuid = require('uuid/v4');
 const QRCode = require('qrcode');
 const { db } = require('../config/database');
 const { transporter } = require('../config/email');
+const emailTemplate = require('../config/emailHtmlTemplate');
 
 class Ticket{
     
@@ -10,24 +11,40 @@ class Ticket{
         
     }
     static buyTicket = (req, res) => {
-        //TODO
-        //Make mailOptions dynamic
+        const { eventId } = req.body;
 
-        QRCode.toDataURL(uuid(), (err, url) => {
-            const mailOptions = {
-                from: process.env.EMAIL_FROM,
-                to: 'dannegareh@gmail.com',
-                subject: 'Text gmail email',
-                html: `<h1>Check file attached to see your code</h1>`,
-                attachments: [{
-                    path: url
-                }]
-            };            
-            transporter.sendMail(mailOptions, (err, mailInfo) => {
-                if(err) res.json({ err: 'server error' });
-                res.json({ msg: 'Email sent' });
+        db.query('call GetEvents(?)', [eventId], (err, eventInfo) => {
+            if(err) res.json({ err: 'database error' });
+            const { title, price, event_date } = eventInfo[0][0];
+            const generatedCode = uuid();
+            QRCode.toDataURL(generatedCode, (_, qrCodeUri) => {
+                const mailOptions = {
+                    from: process.env.EMAIL_FROM,
+                    to: 'dannegareh@gmail.com',
+                    subject: 'Ticketo purchase',
+                    html: emailTemplate(title, event_date, price),
+                    attachments: [{
+                        path: qrCodeUri
+                    }]
+                };
+                transporter.sendMail(mailOptions, (err, mailInfo) => {
+                    console.log(err);
+                    //TODO
+                    //Put these messages in a constant file
+                    if(err) res.json({ err: 'server error' });
+                    res.json({ msg: 'Email sent' });
+                }); 
             });
         });
+        
+        //QRCode.toDataURL(uuid(), (err, url) => {
+           
+            // transporter.sendMail(mailOptions, (err, mailInfo) => {
+            //     console.log(err);
+            //     if(err) res.json({ err: 'server error' });
+            //     res.json({ msg: 'Email sent' });
+            // });
+        //});
     }
 }
 
