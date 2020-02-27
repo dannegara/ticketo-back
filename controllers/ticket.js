@@ -29,22 +29,11 @@ class Ticket{
                 };
                 transporter.sendMail(mailOptions, (err, mailInfo) => {
                     console.log(err);
-                    //TODO
-                    //Put these messages in a constant file
                     if(err) res.json({ err: 'server error' });
                     res.json({ msg: 'Email sent' });
                 }); 
             });
         });
-        
-        //QRCode.toDataURL(uuid(), (err, url) => {
-           
-            // transporter.sendMail(mailOptions, (err, mailInfo) => {
-            //     console.log(err);
-            //     if(err) res.json({ err: 'server error' });
-            //     res.json({ msg: 'Email sent' });
-            // });
-        //});
     }
 }
 
