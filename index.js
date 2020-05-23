@@ -26,6 +26,11 @@ app.use('/api/countries', countriesRoute);
 app.use('/api/ticket', ticketRoute);
 app.use('/api/events', eventsRoute);
 
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).json(err);
+})
+
 app.use((_, res) => {
     res.status(404).json({ err: 'invalid route' });
 });

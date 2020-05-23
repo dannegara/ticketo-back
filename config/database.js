@@ -12,6 +12,14 @@ connection.connect(err => {
     if(err) throw err;
 });
 
+errHandlingDbQuery = (query, params, cb) => {
+    connection.query(query, params, (err, result) => {
+        if(err) throw new Error(err);
+        cb && cb(result);
+    });
+}
+
 module.exports={
-    db: connection
+    db: connection,
+    errHandlingDbQuery,
 }

@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { db } = require('../config/database');
+const { db, errHandlingDbQuery } = require('../config/database');
 const saltRounds = 10;
 
 class Auth{
@@ -48,6 +48,12 @@ class Auth{
                 if(databaseError) res.status(500).json({msg: 'Database error'});
                 res.status(200).json(databaseResponse[0][0]);
             });
+        });
+    }
+    static getUserData = (req, res) => {
+        const { userId } = req;
+        errHandlingDbQuery('call GetUsers(?)', [userId], ([[userInfo]]) => {
+            res.json(userInfo);
         });
     }
 }
