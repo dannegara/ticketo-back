@@ -19,8 +19,7 @@ class Auth{
                     }else{
                         const token = jwt.sign(
                             databaseResponse[0][0].id, //Hashing our user id to token
-                            process.env.TOKEN_SECRET_KEY, //using this secret key from our env file
-                            { expiresIn: '7d' } //will be available for 7 days
+                            process.env.TOKEN_SECRET_KEY //using this secret key from our env file
                         );
                         res.json({ msg: 'login success', token });
                     }
