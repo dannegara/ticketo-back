@@ -2,7 +2,7 @@ const { db } = require('../config/database');
 
 class Countries{
     static getCountries = (req, res) => {
-        const countryId = req.params.countryId;
+        const { countryId = null } = req.params;
         db.query('call GetCountries(?)',[countryId], (err, result) => {
             if(err) throw err;
             const countries = result[0];

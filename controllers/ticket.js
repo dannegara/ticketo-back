@@ -7,9 +7,14 @@ const emailTemplate = require('../config/emailHtmlTemplate');
 class Ticket{
     
     static activateTicket = (req, res) => {
-        const { userId, qrCode } = req.body;
-        
+        const { userId, body: { qrCode } } = req;
+        db.query('call CheckTicket(?,?)', [userId, qrCode], (err, ticketInfo) => {
+            if(err) res.status(500),json({ err: 'database error' });
+            const [[{ msg }]] = ticketInfo; //Desctructuring the db info from an object of a two dimensional array
+            res.status(200).json({ msg });
+        })
     }
+
     static buyTicket = (req, res) => {
         const { eventId } = req.body;
 
@@ -28,7 +33,6 @@ class Ticket{
                     }]
                 };
                 transporter.sendMail(mailOptions, (err, mailInfo) => {
-                    console.log(err);
                     if(err) res.json({ err: 'server error' });
                     res.json({ msg: 'Email sent' });
                 }); 

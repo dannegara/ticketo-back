@@ -12,4 +12,6 @@ connection.connect(err => {
     if(err) throw err;
 });
 
-module.exports={db: connection}
+module.exports={
+    db: connection
+}

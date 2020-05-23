@@ -17,7 +17,11 @@ class Auth{
                     if(result === false){
                         res.json({ msg: 'invalid login or password' });
                     }else{
-                        const token = jwt.sign(databaseResponse[0][0].id, process.env.TOKEN_SECRET_KEY);
+                        const token = jwt.sign(
+                            databaseResponse[0][0].id, //Hashing our user id to token
+                            process.env.TOKEN_SECRET_KEY, //using this secret key from our env file
+                            { expiresIn: '7d' } //will be available for 7 days
+                        );
                         res.json({ msg: 'login success', token });
                     }
                 });
