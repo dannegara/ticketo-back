@@ -26,6 +26,8 @@ errHandlingDbQuery = (query, params, cb) => {
         cb && cb(result);
     });
 }
+
+//new way to call stored procedure in mySQL
 const call = (procedureName, params) => {
     return new Promise((resolve, reject) => {
         const questionMarks = new Array(params.length).fill('?').join(',');
