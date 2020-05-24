@@ -20,6 +20,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(decodeToken);
+app.use(express.static(__dirname + "/"))
 
 app.use('/api/auth', authRoute);
 app.use('/api/countries', countriesRoute);

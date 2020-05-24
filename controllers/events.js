@@ -1,4 +1,4 @@
-const { db } = require('../config/database');
+const { db, call } = require('../config/database');
 
 class Events {
     static getEvents = (req, res) => {
@@ -7,9 +7,35 @@ class Events {
             res.json(eventId ? events[0] : events);
         });
     }
-    static createEvent = (req, res) => {
-        console.log(res.body);
-        res.send('hello :)');
+    static createEvent = async (req, res) => {
+        const {
+            userId: organizerId,
+            file: { path },
+            body: {
+                title,
+                description,
+                event_date,
+                event_time,
+                country_id,
+                city,
+                address,
+                price
+            }
+        } = req;
+
+        const [[{ msg }]] = await call('CreateEvent', [
+            title,
+            description,
+            organizerId,
+            event_date,
+            event_time,
+            country_id,
+            city,
+            address,
+            price,
+            path
+        ]);
+        res.json({ msg });
     }
 }
 

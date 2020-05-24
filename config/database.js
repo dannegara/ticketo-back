@@ -26,8 +26,18 @@ errHandlingDbQuery = (query, params, cb) => {
         cb && cb(result);
     });
 }
+const call = (procedureName, params) => {
+    return new Promise((resolve, reject) => {
+        const questionMarks = new Array(params.length).fill('?').join(',');
+        connection.query(`call ${procedureName}(${questionMarks})`, params, (err, res) => {
+            if(err) throw new Error(err);
+            resolve(res);
+        });
+    });
+}
 
 module.exports={
+    call,
     db: connection,
-    errHandlingDbQuery,
+    errHandlingDbQuery
 }
