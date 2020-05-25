@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { db, errHandlingDbQuery } = require('../config/database');
+const { db, call } = require('../config/database');
 const saltRounds = 10;
 
 class Auth{
@@ -49,11 +49,14 @@ class Auth{
             });
         });
     }
-    static getUserData = (req, res) => {
+    static getUserData = async (req, res) => {
         const { userId } = req;
-        errHandlingDbQuery('call GetUsers(?)', [userId], ([[userInfo]]) => {
+        if(userId) {
+            const [[ userInfo ]] = await call('GetUsers', [userId]);
             res.json(userInfo);
-        });
+        }else {
+            res.status(404).json({ err: 'no token' });
+        }
     }
 }
 
