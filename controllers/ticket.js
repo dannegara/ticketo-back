@@ -1,6 +1,6 @@
 const uuid = require('uuid/v4');
 const QRCode = require('qrcode');
-const { db } = require('../config/database');
+const { db, call } = require('../config/database');
 const { transporter } = require('../config/email');
 const emailTemplate = require('../config/emailHtmlTemplate');
 
@@ -15,8 +15,9 @@ class Ticket{
         })
     }
 
-    static buyTicket = (req, res) => {
-        const { eventId } = req.body;
+    static buyTicket = async (req, res) => {
+        const { body: { eventId }, userId } = req;
+        //TODO take user email by his id
 
         db.query('call GetEvents(?)', [eventId], (err, eventInfo) => {
             if(err) res.json({ err: 'database error' });

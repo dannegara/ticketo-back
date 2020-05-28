@@ -7,6 +7,7 @@ const authRoute = require('./routes/auth');
 const countriesRoute = require('./routes/countries');
 const ticketRoute = require('./routes/ticket');
 const eventsRoute = require('./routes/events');
+const cartRoute = require('./routes/cart');
 
 //MiddleWares
 const { decodeToken } = require('./middleware/chechToken');
@@ -26,6 +27,7 @@ app.use('/api/auth', authRoute);
 app.use('/api/countries', countriesRoute);
 app.use('/api/ticket', ticketRoute);
 app.use('/api/events', eventsRoute);
+app.use('/api/cart', cartRoute);
 
 app.use((err, req, res, next) => {
     console.error(err);
