@@ -18,11 +18,12 @@ class Ticket{
     static buyTicket = async (req, res) => {
         const { body: { eventId }, userId } = req;
         const [[{ email }]] = await call('GetUsers', [userId]);
-        
+        const generatedCode = uuid();
+        await call('AddTicket', [generatedCode, userId, eventId]);
+
         db.query('call GetEvents(?)', [eventId], (err, eventInfo) => {
             if(err) res.json({ err: 'database error' });
             const { title, price, event_date } = eventInfo[0][0];
-            const generatedCode = uuid();
             QRCode.toDataURL(generatedCode, (_, qrCodeUri) => {
                 const mailOptions = {
                     from: process.env.EMAIL_FROM,
