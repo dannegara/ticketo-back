@@ -2,8 +2,15 @@ const { db, call } = require('../config/database');
 
 class Events {
     static getEvents = (req, res) => {
-        const { eventId = null } = req.params;
-        db.query('call GetEvents(?)', [eventId], (err, [events]) => {
+        const {
+            params: {
+                eventId = null
+            },
+            query: {
+                userId = null
+            }
+        } = req;
+        db.query('call GetEvents(?,?)', [eventId, userId], (err, [events]) => {
             res.json(eventId ? events[0] : events);
         });
     }
@@ -23,7 +30,7 @@ class Events {
             }
         } = req;
 
-        const [[ res ]] = await call('CreateEvent', [
+        const [[ msg ]] = await call('CreateEvent', [
             title,
             description,
             organizerId,
@@ -35,7 +42,7 @@ class Events {
             price,
             path
         ]);
-        res.json(res);
+        res.json(msg);
     }
 }
 
