@@ -23,7 +23,7 @@ class Events {
             }
         } = req;
 
-        const [[{ msg }]] = await call('CreateEvent', [
+        const [[ res ]] = await call('CreateEvent', [
             title,
             description,
             organizerId,
@@ -35,7 +35,7 @@ class Events {
             price,
             path
         ]);
-        res.json({ msg });
+        res.json(res);
     }
 }
 
